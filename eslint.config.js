@@ -89,6 +89,6 @@ export default eslintToolingTs.config(
   ...eslintPluginX.configs.recommended,
 
   {
-    ignores: ['dist/'],
+    ignores: ['dist/', 'coverage/'],
   },
 )
