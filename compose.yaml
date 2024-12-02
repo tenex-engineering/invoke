@@ -1,0 +1,19 @@
+services:
+  app:
+    build:
+      context: ./
+    stop_signal: SIGKILL
+    tty: true
+    develop:
+      watch:
+        - action: sync
+          path: ./
+          target: /app/
+          ignore:
+            - dist/
+            - node_modules/
+        - action: sync+restart
+          path: package.json
+          target: /app/package.json
+        - action: rebuild
+          path: yarn.lock

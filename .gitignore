@@ -1,0 +1,12 @@
+dist/
+coverage/
+node_modules/
+
+compose.override.yaml
+
+.devcontainer
+.vscode/*
+
+.DS_Store
+
+core.*
