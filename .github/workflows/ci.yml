@@ -20,29 +20,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore node_modules from cache
-        id: cache
-        uses: actions/cache/restore@v4
-        with:
-          path: node_modules/
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Setup Node.js
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
           cache: yarn
 
-      - if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+      - run: yarn install --frozen-lockfile
 
-      - name: Save node_modules to cache
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+      - uses: actions/cache/save@v4
         with:
           path: node_modules/
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node-${{ github.sha }}
 
   build:
     name: Build
@@ -51,23 +39,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
 
-      - name: Cache restore node_modules
-        uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@v4
         with:
           fail-on-cache-miss: true
           path: node_modules/
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node-${{ github.sha }}
 
-      - name: Build
-        run: npm run build
+      - run: npm run build
 
-      - name: Cache save build
-        uses: actions/cache/save@v4
+      - uses: actions/cache/save@v4
         with:
           path: dist/
           key: ${{ runner.os }}-build-${{ github.sha }}
@@ -114,14 +98,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
           registry-url: https://registry.npmjs.org
 
-      - name: Cache restore build
-        uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@v4
         with:
           fail-on-cache-miss: true
           path: dist/
